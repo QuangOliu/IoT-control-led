@@ -43,7 +43,7 @@ const SalesChart = () => {
     },
   };
   return (
-    <Card>
+    <Card style={{height:"100%"}}>
       <CardBody>
         <CardTitle tag="h5">Sales Summary</CardTitle>
         <CardSubtitle className="text-muted" tag="h6">
@@ -52,7 +52,8 @@ const SalesChart = () => {
         <Chart
           type="area"
           width="100%"
-          height="390"
+          // height="390"
+          height="auto"
           options={chartoptions.options}
           series={chartoptions.series}
         ></Chart>

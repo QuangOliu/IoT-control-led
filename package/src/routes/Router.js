@@ -1,5 +1,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
+import NonLayout from "../layouts/NonLayout.js";
+import IoT from "../views/IoT.js";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -35,6 +37,13 @@ const ThemeRoutes = [
       { path: "/table", exact: true, element: <Tables /> },
       { path: "/forms", exact: true, element: <Forms /> },
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
+    ],
+  },
+  {
+    path: "/",
+    element: <NonLayout />,
+    children: [
+      { path: "/iot", exact: true, element: <IoT /> },
     ],
   },
 ];
