@@ -9,7 +9,7 @@ const Controller = (props) => {
   let iconON = props.icon;
   let iconOFF = props?.iconOFF || props.icon;
   return (
-    <Card>
+    <Card className="h-autox">
       <CardBody>
         <div className='d-flex align-items-center justify-content-between' style={{ alignItems: "center" }}>
           <div>

@@ -56,11 +56,11 @@ const IoT = () => {
         {Array.from({ length: 100 }, (_, i) => (
           <Col lg='4' key={i}>
             <TopCards
-              bg='bg-light-success text-success'
               title='Profit'
               subtitle='Yearly Earning'
-              earning={i + 1} // Adding 1 to start from 1 instead of 0
+              earning={i + 1}
               icon='bi bi-wallet'
+              // low="10" mid ="20" hight="30"
             />
           </Col>
         ))}
@@ -69,13 +69,13 @@ const IoT = () => {
       {/***Top Cards***/}
       <Row>
         <Col lg='4'>
-          <TopCards bg='bg-light-success text-success' title='Temp' subtitle='°C' earning={randomValue1} icon='bi bi-thermometer-half' />
+          <TopCards title='Temp' subtitle='°C' earning={randomValue1} icon='bi bi-thermometer-half' />
         </Col>
         <Col lg='4'>
-          <TopCards bg='bg-light-danger text-danger' title='Humidity' subtitle='%' earning={randomValue2} icon='bi bi-moisture' />
+          <TopCards title='Humidity' subtitle='%' earning={randomValue2} icon='bi bi-moisture' />
         </Col>
         <Col lg='4'>
-          <TopCards bg='bg-light-warning text-warning' title='Brightness' subtitle='Lux' earning={randomValue3} icon='bi bi-brightness-high-fill' />
+          <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} icon='bi bi-brightness-high-fill' />
         </Col>
       </Row>
       {/***Sales & Feed***/}
@@ -86,11 +86,11 @@ const IoT = () => {
         <Col lg='4'>
           <Row className='flex-column' style={{ height: "100%" }}>
             <Col lg='12'>
-              <Controller animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
+              <Controller cusStyle="" animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
             </Col>
-            <Col lg='12'>
-              <Controller animation='text-success rotating' title='Fan' icon='bi bi-fan' />
-            </Col>
+            <Col lg='12'  >
+              <Controller cusStyle="" animation='text-success rotating' title='Fan' icon='bi bi-fan' />
+            </Col>  
           </Row>
         </Col>
       </Row>
