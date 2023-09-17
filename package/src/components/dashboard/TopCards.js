@@ -43,8 +43,8 @@ const TopCards = (props) => {
 
   return (
     
-    <Card className={`${isBlinking ? "blinking" : ""}`} style={!isBlinking ? gradientStyle : {}}>
-      <CardBody  height="100%" >
+    <Card className={`${isBlinking ? "blinking h-100" : "h-100"}`} style={!isBlinking ? gradientStyle : {}}>
+      <CardBody  height="100%" className="d-flex align-items-center" >
         <div className='d-flex'>
           <div className={`circle-box lg-box d-inline-block ${calculateBG(props?.earning)}`}>
             <i className={props.icon}></i>

@@ -4,23 +4,6 @@ import TopCards from "../components/dashboard/TopCards";
 import Controller from "../components/dashboard/Controller";
 import { useEffect, useState } from "react";
 
-const data = [
-  {
-    name: "Temp",
-    data: [0, 31, 40, 28, 51, 42, 109, 100],
-  },
-  {
-    name: "Humidity",
-    data: [0, 11, 32, 45, 32, 34, 52, 41],
-  },
-  {
-    name: "Brightness",
-    data: [0, 11, 32, 45, 32, 34, 52, 41],
-  },
-];
-
-const timeLine = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug"];
-
 const IoT = () => {
   const [randomValue1, setRandomValue1] = useState(null);
   const [randomValue2, setRandomValue2] = useState(null);
@@ -50,7 +33,7 @@ const IoT = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ height: "100vh" }}>
       {/* Test Color */}
       {/* <Row>
         {Array.from({ length: 100 }, (_, i) => (
@@ -67,30 +50,30 @@ const IoT = () => {
       </Row> */}
 
       {/***Top Cards***/}
-      <Row>
-        <Col lg='4'>
+      <Row style={{ height: "30%" }}>
+        <Col lg='4' className='mb-4'>
           <TopCards title='Temp' subtitle='°C' earning={randomValue1} icon='bi bi-thermometer-half' />
         </Col>
-        <Col lg='4'>
+        <Col lg='4' className='mb-4'>
           <TopCards title='Humidity' subtitle='%' earning={randomValue2} icon='bi bi-moisture' />
         </Col>
-        <Col lg='4'>
+        <Col lg='4' className='mb-4'>
           <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} icon='bi bi-brightness-high-fill' />
         </Col>
       </Row>
       {/***Sales & Feed***/}
       <Row>
         <Col lg='8'>
-          <SalesChart seriesData={data} time={timeLine} />
+          <SalesChart seriesData={[randomValue1, randomValue2, randomValue3]} />
         </Col>
         <Col lg='4'>
           <Row className='flex-column' style={{ height: "100%" }}>
-            <Col lg='12'>
-              <Controller cusStyle="" animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
+            <Col lg='12' className='h-50'>
+              <Controller cusStyle='' animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
             </Col>
-            <Col lg='12'  >
-              <Controller cusStyle="" animation='text-success rotating' title='Fan' icon='bi bi-fan' />
-            </Col>  
+            <Col lg='12' className='h-50'>
+              <Controller cusStyle='' animation='text-success rotating' title='Fan' icon='bi bi-fan' />
+            </Col>
           </Row>
         </Col>
       </Row>

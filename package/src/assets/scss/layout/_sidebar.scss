@@ -1,6 +1,7 @@
 .sidebarArea {
   flex-shrink: 0;
-  width: $sidebarWidth;
+  // width: $sidebarWidth;
+  width: auto;
   background-color: $sidebarColor;
   .sidenav-bg:hover {
     background-color: $gray-100;
@@ -9,15 +10,16 @@
 }
 
 @include media-breakpoint-down(lg) {
-  .sidebarArea {
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-    z-index: 1;
+}
+
+.sidebarArea {
+  position: fixed;
+  height: 100%;
+  // width: 260px;
+  overflow: auto;
+  z-index: 1;
+  transition: 0.2s ease-in;
+  &.showSidebar {
     margin-left: -$sidebarWidth;
-    transition: 0.2s ease-in;
-    &.showSidebar {
-      margin-left: 0px;
-    }
   }
 }
