@@ -8,9 +8,9 @@ const Tables = () => {
     // temperature
     // humidity
     // brightness
-    { id: 1, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
-    { id: 2, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
-    { id: 3, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
+    { id: 1, time: "2002-09-24-06:00", person: "Quang", type:"Light", action: "ON" },
+    { id: 2, time: "2002-09-24-06:00", person: "Quang", type:"Light", action: "OFF" },
+    { id: 3, time: "2002-09-24-06:00", person: "Quang", type:"FAN", action: "ON" },
     // Add more data as needed
   ];
 
@@ -44,9 +44,9 @@ const Tables = () => {
                 <tr>
                   <th>#</th>
                   <th>TIME</th>
-                  <th>TEMPERATURE</th>
-                  <th>HUMIDITY</th>
-                  <th>BRIGHTNESS</th>
+                  <th>PERSON</th>
+                  <th>TYPE</th>
+                  <th>ACTION</th>
                 </tr>
               </thead>
               <tbody>
@@ -54,9 +54,9 @@ const Tables = () => {
                   <tr key={item.id}>
                     <th scope='row'>{item.id}</th>
                     <td>{item.time}</td>
-                    <td>{item.temperature}</td>
-                    <td>{item.humidity}</td>
-                    <td>{item.brightness}</td>
+                    <td>{item.person}</td>
+                    <td>{item.type}</td>
+                    <td>{item.action}</td>
                   </tr>
                 ))}
               </tbody>

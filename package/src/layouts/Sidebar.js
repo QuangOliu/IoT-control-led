@@ -63,6 +63,11 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
+    title: "History",
+    href: "/history",
+    icon: "bi bi-layout-split",
+  },
+  {
     title: "Table",
     href: "/table",
     icon: "bi bi-layout-split",
