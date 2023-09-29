@@ -5,9 +5,6 @@
 
 #define DHTPIN 14  // Chân dữ liệu của cảm biến DHT11
 #define DHTTYPE DHT11
-#define LED1 2           // Chân GPIO của LED 1
-#define LED2 4           // Chân GPIO của LED 2
-// #define LED3 5           // Chân GPIO của LED 3
 #define LIGHT_SENSOR A0  // Chân analog của cảm biến ánh sáng
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -19,14 +16,21 @@ const char* password = "123456781";
 // Thiết lập thông tin MQTT broker
 const char* mqtt_broker = "192.168.254.214";
 const int mqtt_port = 1883;
-const char* mqtt_topic_led1 = "esp8266/led1";  // Chủ đề MQTT cho LED 1
-const char* mqtt_topic_led2 = "esp8266/led2";  // Chủ đề MQTT cho LED 2
-// const char* mqtt_topic_led3 = "esp8266/led3";  // Chủ đề MQTT cho LED 3
 const char* mqtt_sensor_topic = "esp8266/sensor";
 
-bool led1State = false;
-bool led2State = false;
-// bool led3State = false;
+struct Led {
+  int pin;
+  const char* topic;
+  bool state;
+};
+
+Led leds[] = {
+  { 2, "esp8266/led1", false },
+  { 4, "esp8266/led2", false },
+  {5, "esp8266/led3", false},
+  // {6, "esp8266/led4", false},
+  // Thêm các đèn khác ở đây nếu cần
+};
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -43,37 +47,17 @@ void setup() {
   }
   Serial.println("Kết nối WiFi thành công");
 
-  // Setting LED pins as output
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  // pinMode(LED3, OUTPUT);
-  digitalWrite(LED1, LOW);  // Turn off LED 1 initially
-  digitalWrite(LED2, LOW);  // Turn off LED 2 initially
-  // digitalWrite(LED3, LOW);  // Turn off LED 3 initially
+  // Khởi tạo đèn theo mảng leds
+  for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+    pinMode(leds[i].pin, OUTPUT);
+    digitalWrite(leds[i].pin, LOW);  // Tắt đèn ban đầu
+    client.subscribe(leds[i].topic);
+    Serial.println(leds[i].topic);
+  }
 
   // Kết nối đến MQTT broker
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
-  while (!client.connected()) {
-    String client_id = "esp8266-client-";
-    client_id += String(WiFi.macAddress());
-    Serial.printf("The client %s connects to the public MQTT broker\n", client_id.c_str());
-    if (client.connect(client_id.c_str())) {
-      Serial.println("Public MQTT broker connected");
-      client.subscribe(mqtt_topic_led1);
-      client.subscribe(mqtt_topic_led2);
-      // client.subscribe(mqtt_topic_led3);
-    } else {
-      Serial.print("Failed with state ");
-      Serial.print(client.state());
-      delay(2000);
-    }
-  }
-
-  // Đăng ký callback
-  client.setCallback(callback);
-
-  // Kết nối đến MQTT broker và subscribe vào các topic
   reconnect();
 }
 
@@ -92,9 +76,11 @@ void loop() {
   jsonDoc["humidity"] = humidity;
   jsonDoc["temperature"] = temperature;
   jsonDoc["light"] = lightValue;
-  jsonDoc["led1State"] = led1State;
-  jsonDoc["led2State"] = led2State;
-  // jsonDoc["led3State"] = led3State;
+
+  // Đặt trạng thái của đèn trong JSON
+  for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+    jsonDoc[leds[i].topic] = leds[i].state;
+  }
 
   // Chuyển đối tượng JSON thành chuỗi JSON
   String jsonString;
@@ -119,39 +105,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.print(message);
 
-  if (strcmp(topic, mqtt_topic_led1) == 0) {
-    Serial.print("đã vào đây: ");
-    Serial.println(topic);
-    if (message == "on" && !led1State) {
-      digitalWrite(LED1, HIGH);  // Bật đèn LED 1
-      led1State = true;
-    } else if (message == "off" && led1State) {
-      digitalWrite(LED1, LOW);  // Tắt đèn LED 1
-      led1State = false;
+  // Tìm đèn tương ứng và thay đổi trạng thái
+  for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+    if (strcmp(topic, leds[i].topic) == 0) {
+      if (message == "on" && !leds[i].state) {
+        digitalWrite(leds[i].pin, HIGH);  // Bật đèn
+        leds[i].state = true;
+      } else if (message == "off" && leds[i].state) {
+        digitalWrite(leds[i].pin, LOW);  // Tắt đèn
+        leds[i].state = false;
+      }
     }
   }
-  if (strcmp(topic, mqtt_topic_led2) == 0) {
-    Serial.print("đã vào đây: ");
-    Serial.println(topic);
-    if (message == "on" && !led2State) {
-      digitalWrite(LED2, HIGH);  // Bật đèn LED 2
-      led2State = true;
-    } else if (message == "off" && led2State) {
-      digitalWrite(LED2, LOW);  // Tắt đèn LED 2
-      led2State = false;
-    }
-  }
-  // if (strcmp(topic, mqtt_topic_led3) == 0) {
-  //   Serial.print("đã vào đây: ");
-  //   Serial.println(topic);
-  //   if (message == "on" && !led3State) {
-  //     digitalWrite(LED3, HIGH);  // Bật đèn LED 2
-  //     led3State = true;
-  //   } else if (message == "off" && led3State) {
-  //     digitalWrite(LED3, LOW);  // Tắt đèn LED 2
-  //     led3State = false;
-  //   }
-  // }
 
   Serial.println();
   Serial.println("-----------------------");
@@ -163,8 +128,10 @@ void reconnect() {
     Serial.print("Kết nối tới MQTT broker...");
     if (client.connect("ESP8266Client")) {
       Serial.println("Kết nối MQTT thành công");
-      client.subscribe(mqtt_topic_led1);
-      client.subscribe(mqtt_topic_led2);
+      // Đăng ký lại cho tất cả các đèn khi kết nối lại
+      for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+        client.subscribe(leds[i].topic);
+      }
     } else {
       Serial.print("Kết nối MQTT thất bại. Thử lại sau 5 giây...");
       delay(5000);
