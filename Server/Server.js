@@ -2,11 +2,15 @@ const express = require('express');
 const mqtt = require('mqtt');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-require('dotenv').config(); // Đọc các biến môi trường từ tệp .env
+const http = require('http');
+const socketIo = require('socket.io');
+require('dotenv').config();
 
+const cors = require('cors');
 const app = express();
 const port = 5000;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 // Kết nối đến cơ sở dữ liệu MySQL
@@ -54,8 +58,33 @@ mqttClient.on('message', (topic, message) => {
 const registeredLeds = {
   led1: { topic: 'esp8266/led1' },
   led2: { topic: 'esp8266/led2' },
-  // Thêm thông tin về các đèn LED khác ở đây nếu cần
 };
+
+
+// Tạo HTTP server
+const server = http.createServer(app);
+
+// Tạo WebSocket server
+const io = socketIo(server);
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  
+  // Gửi dữ liệu mới nhất cho máy khách khi có kết nối mới
+  const sql = 'SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 1';
+  db.query(sql, (err, result) => {
+    if (!err && result.length > 0) {
+      const latestData = result[0];
+      socket.emit('data', latestData);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
+
+
 // API để điều khiển đèn
 app.post('/control/led/:ledId', (req, res) => {
   const ledId = req.params.ledId;
@@ -86,6 +115,28 @@ app.post('/control/led/:ledId', (req, res) => {
     res.status(400).json({ success: false, message: 'Yêu cầu không hợp lệ' });
   }
 });
+
+// API để truy vấn dữ liệu mới nhất của sensor_data với phân trang
+app.get('/sensor-data', (req, res) => {
+  const page = req.query.page || 1; // Trang mặc định là 1
+  const perPage = req.query.perPage || 10; // Số lượng dòng trên mỗi trang mặc định là 10
+
+  const startIndex = (page - 1) * perPage;
+  const endIndex = page * perPage;
+
+  const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Lỗi khi truy vấn dữ liệu:', err);
+      res.status(500).json({ success: false, message: 'Lỗi khi truy vấn dữ liệu' });
+    } else {
+      const sensorData = result;
+      res.json({ success: true, sensorData });
+    }
+  });
+});
+
 
 
 

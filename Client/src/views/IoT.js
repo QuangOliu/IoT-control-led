@@ -9,29 +9,57 @@ const IoT = () => {
   const [randomValue2, setRandomValue2] = useState(null);
   const [randomValue3, setRandomValue3] = useState(null);
 
+  // useEffect(() => {
+  //   const interval1 = setInterval(() => {
+  //     const random = Math.floor(Math.random() * 100) + 1;
+  //     setRandomValue1(random);
+  //   }, 2000);
+
+  //   const interval2 = setInterval(() => {
+  //     const random = Math.floor(Math.random() * 100) + 1;
+  //     setRandomValue2(random);
+  //   }, 2000);
+
+  //   const interval3 = setInterval(() => {
+  //     const random = Math.floor(Math.random() * 100) + 1;
+  //     setRandomValue3(random);
+  //   }, 2000);
+
+  //   return () => {
+  //     clearInterval(interval1);
+  //     clearInterval(interval2);
+  //     clearInterval(interval3);
+  //   };
+  // }, []);
+  const [sensorData, setSensorData] = useState({});
+
   useEffect(() => {
-    const interval1 = setInterval(() => {
-      const random = Math.floor(Math.random() * 100) + 1;
-      setRandomValue1(random);
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/sensor-data"); // Đảm bảo URL chính xác
+        if (!response.ok) {
+          throw new Error("Không thể lấy dữ liệu từ máy chủ");
+        }
+        const data = await response.json();
+        setRandomValue1(data.sensorData[0].temperature);
+        setRandomValue2(data.sensorData[0].humidity);
+        setRandomValue3(data.sensorData[0].light);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      fetchData();
     }, 2000);
 
-    const interval2 = setInterval(() => {
-      const random = Math.floor(Math.random() * 100) + 1;
-      setRandomValue2(random);
-    }, 2000);
-
-    const interval3 = setInterval(() => {
-      const random = Math.floor(Math.random() * 100) + 1;
-      setRandomValue3(random);
-    }, 2000);
+    // Gọi fetchData() lần đầu khi component được render
+    fetchData();
 
     return () => {
-      clearInterval(interval1);
-      clearInterval(interval2);
-      clearInterval(interval3);
+      clearInterval(intervalId);
     };
   }, []);
-
   return (
     <div style={{ height: "100vh" }}>
       {/* Test Color */}

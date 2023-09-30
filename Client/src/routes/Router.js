@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-import NonLayout from "../layouts/NonLayout.js";
 import IoT from "../views/IoT.js";
 
 const dataHome = {
@@ -32,8 +31,6 @@ const dataHome = {
   CV: "#",
 };
 
-/****Layouts*****/
-const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 const CustomLayout = lazy(() => import("../layouts/CustomLayout.js"));
 
 /***** Pages ****/

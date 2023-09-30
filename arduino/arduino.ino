@@ -10,11 +10,13 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // Thiết lập kết nối Wi-Fi
-const char* ssid = "ssid";
-const char* password = "123456781";
+const char* ssid = "Quang Oliu";
+const char* password = "123456780";
 
 // Thiết lập thông tin MQTT broker
-const char* mqtt_broker = "192.168.254.214";
+const char* mqtt_broker = "192.168.0.100";
+// IPAddress mqtt_broker;
+
 const int mqtt_port = 1883;
 const char* mqtt_sensor_topic = "esp8266/sensor";
 
@@ -27,7 +29,7 @@ struct Led {
 Led leds[] = {
   { 2, "esp8266/led1", false },
   { 4, "esp8266/led2", false },
-  {5, "esp8266/led3", false},
+  // { 5, "esp8266/led3", false },
   // {6, "esp8266/led4", false},
   // Thêm các đèn khác ở đây nếu cần
 };
@@ -47,6 +49,7 @@ void setup() {
   }
   Serial.println("Kết nối WiFi thành công");
 
+  // Lấy địa chỉ IP của máy tính
   // Khởi tạo đèn theo mảng leds
   for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
     pinMode(leds[i].pin, OUTPUT);
