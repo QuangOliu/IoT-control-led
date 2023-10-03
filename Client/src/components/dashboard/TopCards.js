@@ -1,11 +1,11 @@
 import { Card, CardBody } from "reactstrap";
 
 const TopCards = (props) => {
-
   const low = props?.low || 30;
   const mid = props?.mid || 60;
   const hight = props?.hight || 90;
-  
+  console.log(low, mid, hight);
+
   const isBlinking = props?.earning >= hight;
 
   // CALCULA COLOR FOR EACH VALUE
@@ -22,7 +22,7 @@ const TopCards = (props) => {
 
     return gradientColors;
   };
-  
+
   const calculateBG = (value) => {
     let bgColor = "";
 
@@ -35,16 +35,15 @@ const TopCards = (props) => {
     }
     return bgColor;
   };
-  
+
   const earningColor = calculateColor(props?.earning);
   const gradientStyle = {
     backgroundImage: `linear-gradient(to bottom, ${earningColor})`,
   };
 
   return (
-    
     <Card className={`${isBlinking ? "blinking h-100" : "h-100"}`} style={!isBlinking ? gradientStyle : {}}>
-      <CardBody  height="100%" className="d-flex align-items-center" >
+      <CardBody height='100%' className='d-flex align-items-center'>
         <div className='d-flex'>
           <div className={`circle-box lg-box d-inline-block ${calculateBG(props?.earning)}`}>
             <i className={props.icon}></i>
@@ -52,7 +51,7 @@ const TopCards = (props) => {
           <div className='ms-3'>
             <span>{props.earning}</span>
             <span className='text-muted m-1'>{props.subtitle}</span>
-            <h6  className='mb-0 font-weight-bold'>{props.title}</h6>
+            <h6 className='mb-0 font-weight-bold'>{props.title}</h6>
           </div>
         </div>
       </CardBody>

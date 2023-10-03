@@ -2,34 +2,28 @@ import { useLayoutEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { Card, CardBody, CardSubtitle, CardTitle } from "reactstrap";
 
-const SalesChart = ({ seriesData, timeLine }) => {
+const SalesChart = ({ seriesData }) => {
   const [chartData, setChartData] = useState({
-    // temp: [0, 31, 40, 28, 51, 42, 109, 100],
-    // humi: [0, 11, 32, 45, 32, 34, 52, 41],
-    // brightness: [0, 11, 32, 45, 32, 34, 52, 41],
     temp: [],
     humi: [],
     brightness: [],
   });
 
   useLayoutEffect(() => {
-    // Kiểm tra nếu dữ liệu mới đủ để cập nhật
-    if (seriesData.length >= 3 && seriesData[0] !== null && seriesData[1] !== null && seriesData[2] !== null) {
-      const newChartData = {
-        temp: [...chartData.temp, seriesData[0]],
-        humi: [...chartData.humi, seriesData[1]],
-        brightness: [...chartData.brightness, seriesData[2]],
-      };
+    const newChartData = {
+      temp: [...chartData.temp, seriesData[0]],
+      humi: [...chartData.humi, seriesData[1]],
+      brightness: [...chartData.brightness, seriesData[2]],
+    };
 
-      // Giới hạn chỉ 10 phần tử gần nhất trong mảng
-      for (const key in newChartData) {
-        if (newChartData[key].length > 10) {
-          newChartData[key] = newChartData[key].slice(-10);
-        }
+    // Giới hạn chỉ 10 phần tử gần nhất trong mảng
+    for (const key in newChartData) {
+      if (newChartData[key].length > 10) {
+        newChartData[key] = newChartData[key].slice(-10);
       }
-
-      setChartData(newChartData);
     }
+
+    setChartData(newChartData);
   }, [seriesData]);
 
   const chartoptions = {

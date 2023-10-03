@@ -13,6 +13,11 @@ const port = 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
+const registeredLeds = {
+  led1: { topic: 'esp8266/led1' },
+  led2: { topic: 'esp8266/led2' },
+};
+
 // Kết nối đến cơ sở dữ liệu MySQL
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -41,24 +46,24 @@ mqttClient.on('message', (topic, message) => {
   if (topic === 'esp8266/sensor') {
     const data = JSON.parse(message.toString());
     // Lưu dữ liệu vào cơ sở dữ liệu
-    const sql = 'INSERT INTO sensor_data (humidity, temperature, light, timestamp) VALUES (?, ?, ?, NOW())';
+    if(data.temperature !== null && data.temperature!== null && data.light !== null) {
+      const sql = 'INSERT INTO sensor_data (humidity, temperature, light, timestamp) VALUES (?, ?, ?, NOW())';
 
-    const values = [data.humidity, data.temperature, data.light, data.led1State, data.led2State];
-
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error('Lỗi khi thêm dữ liệu vào cơ sở dữ liệu:', err);
-      } else {
-        console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
-      }
-    });
+      const values = [data.humidity, data.temperature, data.light, data.led1State, data.led2State];
+  
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          console.error('Lỗi khi thêm dữ liệu vào cơ sở dữ liệu:', err);
+        } else {
+          console.log('Dữ liệu đã được lưu vào cơ sở dữ liệu');
+        }
+      });
+    }
+    else {
+      console.error('Lỗi khi thêm dữ liệu vào cơ sở dữ liệu: NULL');
+    }
   }
 });
-
-const registeredLeds = {
-  led1: { topic: 'esp8266/led1' },
-  led2: { topic: 'esp8266/led2' },
-};
 
 
 // Tạo HTTP server
@@ -124,7 +129,8 @@ app.get('/sensor-data', (req, res) => {
   const startIndex = (page - 1) * perPage;
   const endIndex = page * perPage;
 
-  const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
+  const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC`;
+  // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -137,6 +143,27 @@ app.get('/sensor-data', (req, res) => {
   });
 });
 
+
+app.get('/history', (req, res)=> {
+  const page = req.query.page || 1; // Trang mặc định là 1
+  const perPage = req.query.perPage || 10; // Số lượng dòng trên mỗi trang mặc định là 10
+
+  const startIndex = (page - 1) * perPage;
+  const endIndex = page * perPage;
+
+  const sql = `SELECT * FROM led_status ORDER BY timestamp DESC`;
+  // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Lỗi khi truy vấn dữ liệu:', err);
+      res.status(500).json({ success: false, message: 'Lỗi khi truy vấn dữ liệu' });
+    } else {
+      const historyData = result;
+      res.json({ success: true, historyData });
+    }
+  });
+})
 
 
 

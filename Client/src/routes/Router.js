@@ -56,19 +56,19 @@ const ThemeRoutes = [
     children: [
       { path: "/", element: <Navigate to='/iot' /> },
       { path: "/iot", exact: true, element: <IoT /> },
-      { path: "/starter", exact: true, element: <Starter /> },
+      { path: "/table", exact: true, element: <Tables /> },
+      { path: "/history", exact: true, element: <History /> },
       { path: "/about", exact: true, element: <About data={dataHome} /> },
       { path: "/alerts", exact: true, element: <Alerts /> },
+      { path: "/starter", exact: true, element: <Starter /> },
       { path: "/badges", exact: true, element: <Badges /> },
       { path: "/buttons", exact: true, element: <Buttons /> },
       { path: "/cards", exact: true, element: <Cards /> },
       { path: "/grid", exact: true, element: <Grid /> },
-      { path: "/table", exact: true, element: <Tables /> },
-      { path: "/history", exact: true, element: <History /> },
       { path: "/forms", exact: true, element: <Forms /> },
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
     ],
-  }
+  },
 ];
 
 export default ThemeRoutes;

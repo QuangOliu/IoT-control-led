@@ -8,31 +8,7 @@ const IoT = () => {
   const [randomValue1, setRandomValue1] = useState(null);
   const [randomValue2, setRandomValue2] = useState(null);
   const [randomValue3, setRandomValue3] = useState(null);
-
-  // useEffect(() => {
-  //   const interval1 = setInterval(() => {
-  //     const random = Math.floor(Math.random() * 100) + 1;
-  //     setRandomValue1(random);
-  //   }, 2000);
-
-  //   const interval2 = setInterval(() => {
-  //     const random = Math.floor(Math.random() * 100) + 1;
-  //     setRandomValue2(random);
-  //   }, 2000);
-
-  //   const interval3 = setInterval(() => {
-  //     const random = Math.floor(Math.random() * 100) + 1;
-  //     setRandomValue3(random);
-  //   }, 2000);
-
-  //   return () => {
-  //     clearInterval(interval1);
-  //     clearInterval(interval2);
-  //     clearInterval(interval3);
-  //   };
-  // }, []);
-  const [sensorData, setSensorData] = useState({});
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -86,7 +62,7 @@ const IoT = () => {
           <TopCards title='Humidity' subtitle='%' earning={randomValue2} icon='bi bi-moisture' />
         </Col>
         <Col lg='4' className='mb-4'>
-          <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} icon='bi bi-brightness-high-fill' />
+          <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} low={200} mid={400} hight={700} icon='bi bi-brightness-high-fill' />
         </Col>
       </Row>
       {/***Sales & Feed***/}
@@ -97,10 +73,10 @@ const IoT = () => {
         <Col lg='4'>
           <Row className='flex-column' style={{ height: "100%" }}>
             <Col lg='12' className='h-50'>
-              <Controller cusStyle='' animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
+              <Controller devide='led1' animation='text-success' title='Light' icon='bi bi-lightbulb-fill' iconOFF='bi bi-lightbulb-off-fill' />
             </Col>
             <Col lg='12' className='h-50'>
-              <Controller cusStyle='' animation='text-success rotating' title='Fan' icon='bi bi-fan' />
+              <Controller devide='led2' animation='text-success rotating' title='Fan' icon='bi bi-fan' />
             </Col>
           </Row>
         </Col>

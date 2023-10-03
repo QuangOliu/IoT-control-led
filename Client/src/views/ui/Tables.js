@@ -1,18 +1,38 @@
-import React, { useState } from "react";
-import { Card, CardBody, CardTitle, Col, Row, Table, Pagination, PaginationItem, PaginationLink } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Card, CardBody, CardTitle, Col, Row, Table } from "reactstrap";
+
+import { PaginationControl } from "react-bootstrap-pagination-control";
 
 const Tables = () => {
   // Sample data
-  const tableData = [
-    // time
-    // temperature
-    // humidity
-    // brightness
-    { id: 1, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
-    { id: 2, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
-    { id: 3, time: "2002-09-24-06:00", temperature: "28°C", humidity: "80%", brightness: "123" },
-    // Add more data as needed
-  ];
+  const [tableData, setTableData] = useState([{}]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/sensor-data"); // Đảm bảo URL chính xác
+        if (!response.ok) {
+          throw new Error("Không thể lấy dữ liệu từ máy chủ");
+        }
+        const data = await response.json();
+        setTableData(data.sensorData);
+        console.log(tableData);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 2000);
+
+    // Gọi fetchData() lần đầu khi component được render
+    fetchData();
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // Number of items per page
   const itemsPerPage = 10;
@@ -30,6 +50,8 @@ const Tables = () => {
     setCurrentPage(pageNumber);
   };
 
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const [page, setPage] = useState(1);
   return (
     <Row>
       <Col lg='12'>
@@ -53,28 +75,25 @@ const Tables = () => {
                 {currentItems.map((item) => (
                   <tr key={item.id}>
                     <th scope='row'>{item.id}</th>
-                    <td>{item.time}</td>
+                    <td>{item.timestamp}</td>
                     <td>{item.temperature}</td>
                     <td>{item.humidity}</td>
-                    <td>{item.brightness}</td>
+                    <td>{item.light}</td>
                   </tr>
                 ))}
               </tbody>
             </Table>
-            <Pagination>
-              {Array.from({ length: Math.ceil(tableData.length / itemsPerPage) }).map((page, index) => (
-                <PaginationItem key={index} active={currentPage === index + 1}>
-                  <PaginationLink
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageClick(index + 1);
-                    }}
-                    href='#'>
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-            </Pagination>
+            <PaginationControl
+              page={page}
+              between={4}
+              total={totalPages}
+              limit={20}
+              changePage={(page) => {
+                setPage(page);
+                handlePageClick(page);
+              }}
+              ellipsis={1}
+            />
           </CardBody>
         </Card>
       </Col>
