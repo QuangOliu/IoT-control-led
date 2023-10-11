@@ -10,11 +10,11 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // Thiết lập kết nối Wi-Fi
-const char* ssid = "Quang Oliu";
-const char* password = "123456780";
+const char* ssid = "ssid";
+const char* password = "123456781";
 
 // Thiết lập thông tin MQTT broker
-const char* mqtt_broker = "192.168.0.100";
+const char* mqtt_broker = "192.168.254.214";
 // IPAddress mqtt_broker;
 
 const int mqtt_port = 1883;
@@ -26,7 +26,9 @@ struct Led {
   bool state;
 };
 
+// Danh sách các đèn được cấu hình
 Led leds[] = {
+  // pin, kênh, trạng thái khởi tạo
   { 2, "esp8266/led1", false },
   { 4, "esp8266/led2", false },
   // { 5, "esp8266/led3", false },
@@ -73,12 +75,14 @@ void loop() {
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
   int lightValue = analogRead(LIGHT_SENSOR);
+  int dobui = random(0, 101);
 
   // Tạo đối tượng JSON
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["humidity"] = humidity;
   jsonDoc["temperature"] = temperature;
   jsonDoc["light"] = lightValue;
+  // jsonDoc["dobui"] = dobui;
 
   // Đặt trạng thái của đèn trong JSON
   for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {

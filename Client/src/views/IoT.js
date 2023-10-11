@@ -1,22 +1,24 @@
+import { useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
+import Controller from "../components/dashboard/Controller";
 import SalesChart from "../components/dashboard/SalesChart";
 import TopCards from "../components/dashboard/TopCards";
-import Controller from "../components/dashboard/Controller";
-import { useEffect, useState } from "react";
 
 const IoT = () => {
   const [randomValue1, setRandomValue1] = useState(null);
   const [randomValue2, setRandomValue2] = useState(null);
   const [randomValue3, setRandomValue3] = useState(null);
- 
+  const [id, setId] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/sensor-data"); // Đảm bảo URL chính xác
+        const response = await fetch("http://localhost:5000/data-real-time"); // Đảm bảo URL chính xác
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu từ máy chủ");
         }
         const data = await response.json();
+        // eslint-disable-next-line no-unused-expressions
+        setId(data.sensorData[0].id);
         setRandomValue1(data.sensorData[0].temperature);
         setRandomValue2(data.sensorData[0].humidity);
         setRandomValue3(data.sensorData[0].light);
@@ -38,21 +40,6 @@ const IoT = () => {
   }, []);
   return (
     <div style={{ height: "100vh" }}>
-      {/* Test Color */}
-      {/* <Row>
-        {Array.from({ length: 100 }, (_, i) => (
-          <Col lg='4' key={i}>
-            <TopCards
-              title='Profit'
-              subtitle='Yearly Earning'
-              earning={i + 1}
-              icon='bi bi-wallet'
-              // low="10" mid ="20" hight="30"
-            />
-          </Col>
-        ))}
-      </Row> */}
-
       {/***Top Cards***/}
       <Row style={{ height: "30%" }}>
         <Col lg='4' className='mb-4'>
@@ -68,7 +55,7 @@ const IoT = () => {
       {/***Sales & Feed***/}
       <Row>
         <Col lg='8'>
-          <SalesChart seriesData={[randomValue1, randomValue2, randomValue3]} />
+          <SalesChart id={id} />
         </Col>
         <Col lg='4'>
           <Row className='flex-column' style={{ height: "100%" }}>

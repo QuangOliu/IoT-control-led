@@ -50,7 +50,7 @@ mqttClient.on('message', (topic, message) => {
       const sql = 'INSERT INTO sensor_data (humidity, temperature, light, timestamp) VALUES (?, ?, ?, NOW())';
 
       const values = [data.humidity, data.temperature, data.light, data.led1State, data.led2State];
-  
+      // console.log(data.dobui)
       db.query(sql, values, (err, result) => {
         if (err) {
           console.error('Lỗi khi thêm dữ liệu vào cơ sở dữ liệu:', err);
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
   console.log('Client connected');
   
   // Gửi dữ liệu mới nhất cho máy khách khi có kết nối mới
-  const sql = 'SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 1';
+  const sql = 'SELECT * FROM sensor_data ORDER BY timestamp DESC';
   db.query(sql, (err, result) => {
     if (!err && result.length > 0) {
       const latestData = result[0];
@@ -130,6 +130,49 @@ app.get('/sensor-data', (req, res) => {
   const endIndex = page * perPage;
 
   const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC`;
+  // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Lỗi khi truy vấn dữ liệu:', err);
+      res.status(500).json({ success: false, message: 'Lỗi khi truy vấn dữ liệu' });
+    } else {
+      const sensorData = result;
+      res.json({ success: true, sensorData });
+    }
+  });
+});
+
+app.get('/chartdata', (req, res) => {
+  const page = req.query.page || 1; // Trang mặc định là 1
+  const perPage = req.query.perPage || 10; // Số lượng dòng trên mỗi trang mặc định là 10
+
+  const startIndex = (page - 1) * perPage;
+  const endIndex = page * perPage;
+
+  const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 10` ;
+  // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error('Lỗi khi truy vấn dữ liệu:', err);
+      res.status(500).json({ success: false, message: 'Lỗi khi truy vấn dữ liệu' });
+    } else {
+      const sensorData = result;
+      res.json({ success: true, sensorData });
+    }
+  });
+});
+
+// API để truy vấn dữ liệu mới nhất của sensor_data với phân trang
+app.get('/data-real-time', (req, res) => {
+  const page = req.query.page || 1; // Trang mặc định là 1
+  const perPage = req.query.perPage || 10; // Số lượng dòng trên mỗi trang mặc định là 10
+
+  const startIndex = (page - 1) * perPage;
+  const endIndex = page * perPage;
+
+  const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT 1`;
   // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
 
   db.query(sql, (err, result) => {

@@ -1,57 +1,86 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, CardTitle, Col, Row, Table } from "reactstrap";
-
-import { PaginationControl } from "react-bootstrap-pagination-control";
+import { Card, CardBody, CardTitle, Col, Input, Row, Table } from "reactstrap";
+import ReactPaginate from "react-paginate";
 
 const Tables = () => {
   // Sample data
-  const [tableData, setTableData] = useState([{}]);
+  const [searchAttribute, setSearchAttribute] = useState("timestamp");
+  const [tableData, setTableData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemOffset, setItemOffset] = useState(0);
+
+  const itemsPerPage = 20;
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = filteredData.slice(itemOffset, endOffset);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/sensor-data");
+      if (!response.ok) {
+        throw new Error("Không thể lấy dữ liệu từ máy chủ");
+      }
+      const data = await response.json();
+      setTableData(data.sensorData);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/sensor-data"); // Đảm bảo URL chính xác
-        if (!response.ok) {
-          throw new Error("Không thể lấy dữ liệu từ máy chủ");
-        }
-        const data = await response.json();
-        setTableData(data.sensorData);
-        console.log(tableData);
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-      }
-    };
-
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 2000);
-
-    // Gọi fetchData() lần đầu khi component được render
+    const intervalId = setInterval(fetchData, 2000);
     fetchData();
-
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [searchTerm]);
 
-  // Number of items per page
-  const itemsPerPage = 10;
-
-  // State for current page
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Calculate the index of the first and last items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Function to handle page click
-  const handlePageClick = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % filteredData.length;
+    console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
+    setItemOffset(newOffset);
   };
 
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
-  const [page, setPage] = useState(1);
+  useEffect(() => {
+    filterData(searchTerm);
+  }, [tableData]);
+
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+  };
+
+  const filterData = (term) => {
+    const filtered1 = tableData.filter((item) => {
+      // Use the selected attribute for filtering
+      return item[searchAttribute].toString().toLowerCase() === term.toLowerCase();
+    });
+    const filtered2 = tableData.filter((item) => {
+      // Use the selected attribute for filtering
+      return item[searchAttribute].toString().toLowerCase().includes(term.toLowerCase());
+    });
+
+    // filtered2.sort((a, b) => {
+    //   const valueA = a[searchAttribute].toString().toLowerCase();
+    //   const valueB = b[searchAttribute].toString().toLowerCase();
+    //   if (valueA < valueB) {
+    //     return -1;
+    //   }
+    //   if (valueA > valueB) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
+
+    setFilteredData([...filtered1, ...filtered2]);
+    setItemOffset(0); // Reset to the first page when filtering
+  };
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // history.push();
+  };
+
   return (
     <Row>
       <Col lg='12'>
@@ -61,6 +90,18 @@ const Tables = () => {
             Table with Striped
           </CardTitle>
           <CardBody>
+            {/* <div className='search-bar mb-3'>
+              <form onSubmit={handleSubmit}>
+                <Input type='text' placeholder='Tìm kiếm' value={searchTerm} onChange={handleSearch} />
+                <select value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)}>
+                  <option value='timestamp'>TIME</option>
+                  <option value='temperature'>TEMPERATURE</option>
+                  <option value='humidity'>HUMIDITY</option>
+                  <option value='light'>BRIGHTNESS</option>
+                  <option value='id'>#</option>
+                </select>
+              </form>
+            </div> */}
             <Table bordered striped>
               <thead>
                 <tr>
@@ -83,17 +124,8 @@ const Tables = () => {
                 ))}
               </tbody>
             </Table>
-            <PaginationControl
-              page={page}
-              between={4}
-              total={totalPages}
-              limit={20}
-              changePage={(page) => {
-                setPage(page);
-                handlePageClick(page);
-              }}
-              ellipsis={1}
-            />
+
+            <ReactPaginate className='react-paginate' breakLabel='...' nextLabel='>' onPageChange={handlePageClick} pageRangeDisplayed={5} pageCount={totalPages} previousLabel='<' />
           </CardBody>
         </Card>
       </Col>

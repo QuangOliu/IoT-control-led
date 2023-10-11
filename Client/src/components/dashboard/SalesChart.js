@@ -1,44 +1,52 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import { Card, CardBody, CardSubtitle, CardTitle } from "reactstrap";
+import axios from "axios";
 
-const SalesChart = ({ seriesData }) => {
-  const [chartData, setChartData] = useState({
-    temp: [],
-    humi: [],
-    brightness: [],
-  });
+const SalesChart = ({ id }) => {
+  const [temperature, setTemperature] = useState([]);
+  const [humidity, setHumidity] = useState([]);
+  const [light, setLight] = useState([]);
+  const [timestamp, setTimestamp] = useState([]);
 
-  useLayoutEffect(() => {
-    const newChartData = {
-      temp: [...chartData.temp, seriesData[0]],
-      humi: [...chartData.humi, seriesData[1]],
-      brightness: [...chartData.brightness, seriesData[2]],
+  useEffect(() => {
+    // Hàm để lấy dữ liệu từ API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/chartdata`);
+        const data = response.data.sensorData; // Lấy dữ liệu từ trường "sensorData"
+
+        // Tách dữ liệu từ mảng data và cập nhật các state tương ứng
+        const temperatures = data.map((item) => item.temperature);
+        const humidities = data.map((item) => item.humidity);
+        const lights = data.map((item) => item.light);
+        const timestamp = data.map((item) => item.timestamp);
+
+        setTemperature(temperatures);
+        setHumidity(humidities);
+        setLight(lights);
+        setTimestamp(timestamp);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    // Giới hạn chỉ 10 phần tử gần nhất trong mảng
-    for (const key in newChartData) {
-      if (newChartData[key].length > 10) {
-        newChartData[key] = newChartData[key].slice(-10);
-      }
-    }
-
-    setChartData(newChartData);
-  }, [seriesData]);
+    fetchData(); // Gọi hàm fetchData khi component được mount hoặc khi id thay đổi
+  }, [id]); // Sử dụng id làm phần tử trong mảng dependencies để lắng nghe sự thay đổi
 
   const chartoptions = {
     series: [
       {
-        name: "Temp",
-        data: chartData.temp,
+        name: "Temperature",
+        data: temperature,
       },
       {
-        name: "Humi",
-        data: chartData.humi,
+        name: "Humidity",
+        data: humidity,
       },
       {
-        name: "Bright",
-        data: chartData.brightness,
+        name: "Light",
+        data: light,
       },
     ],
     options: {
@@ -57,10 +65,11 @@ const SalesChart = ({ seriesData }) => {
         width: 1,
       },
       xaxis: {
-        categories: [],
+        categories: timestamp, // Bạn có thể cập nhật x-axis theo timestamp nếu cần
       },
     },
   };
+
   return (
     <Card style={{ height: "100%" }}>
       <CardBody>
@@ -68,13 +77,7 @@ const SalesChart = ({ seriesData }) => {
         <CardSubtitle className='text-muted' tag='h6'>
           Yearly Sales Report
         </CardSubtitle>
-        <Chart
-          type='area'
-          width='100%'
-          // height="390"
-          height='auto'
-          options={chartoptions.options}
-          series={chartoptions.series}></Chart>
+        <Chart type='area' width='100%' height='auto' options={chartoptions.options} series={chartoptions.series}></Chart>
       </CardBody>
     </Card>
   );

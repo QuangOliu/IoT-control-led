@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  transition: all .4 ease-in-out;
+  transition: all 0.4 ease-in-out;
 
   li {
     margin: 0;
@@ -64,7 +64,7 @@
     margin-left: 1px;
   }
   &__blank::after {
-    content: '';
+    content: "";
     border: 2px solid #000;
     background-color: #000;
     width: 2px;
@@ -111,7 +111,7 @@
 
   &__social_item a::after {
     position: absolute;
-    content: '';
+    content: "";
     width: 1px;
     height: 100%;
     background-color: #999;
@@ -129,7 +129,7 @@
       padding: 45px 0;
     }
     &__title {
-      font-size:25px;
+      font-size: 25px;
     }
     &__typing {
       font-size: 30px;
@@ -146,7 +146,7 @@
   .home {
     color: #f5f8fc;
     background-color: #191c26; ///
-    transition: all .23s ease-in-out;
+    transition: all 0.23s ease-in-out;
     &__hello {
       color: #f5f8fc;
     }
@@ -169,4 +169,62 @@
       background-color: #f5f8fc;
     }
   }
+}
+
+/* Định dạng trang chia trang và các nút trang trước và sau */
+.react-paginate {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.react-paginate li {
+  display: inline-block;
+  margin: 0 5px;
+  opacity: 0.75;
+}
+
+/* Định dạng nút trang và đường viền */
+.react-paginate a {
+  display: block;
+  padding: 8px 12px;
+  text-align: center;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.react-paginate a:hover {
+  background-color: #0056b3;
+}
+
+/* Định dạng nút trang trước và sau */
+.react-paginate .previous,
+.react-paginate .next {
+  background-color: #ccc;
+  opacity: 1;
+}
+
+/* Định dạng nút trang trước và sau khi hover */
+.react-paginate .previous:hover,
+.react-paginate .next:hover {
+  background-color: #999;
+}
+
+/* Định dạng nút trang hiện tại */
+// .react-paginate .break,
+.react-paginate .selected {
+  // background-color: #333;
+  opacity: 1;
+}
+
+/* Định dạng màu chữ cho nút trang hiện tại */
+.react-paginate .break a,
+.react-paginate .selected a {
+  color: #fff;
 }
