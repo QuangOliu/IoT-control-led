@@ -8,6 +8,7 @@ const IoT = () => {
   const [randomValue1, setRandomValue1] = useState(null);
   const [randomValue2, setRandomValue2] = useState(null);
   const [randomValue3, setRandomValue3] = useState(null);
+  const [randomValue4, setRandomValue4] = useState(null);
   const [id, setId] = useState(1);
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +23,7 @@ const IoT = () => {
         setRandomValue1(data.sensorData[0].temperature);
         setRandomValue2(data.sensorData[0].humidity);
         setRandomValue3(data.sensorData[0].light);
+        setRandomValue4(data.sensorData[0].dobui);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu:", error);
       }
@@ -50,6 +52,9 @@ const IoT = () => {
         </Col>
         <Col lg='4' className='mb-4'>
           <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} low={200} mid={400} hight={700} icon='bi bi-brightness-high-fill' />
+        </Col>
+        <Col lg='4' className='mb-4'>
+          <TopCards title='Độ Bụi' subtitle='Lux' earning={randomValue4} low={200} mid={400} hight={700} icon='bi bi-brightness-high-fill' />
         </Col>
       </Row>
       {/***Sales & Feed***/}

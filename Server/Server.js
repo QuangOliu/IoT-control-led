@@ -46,10 +46,10 @@ mqttClient.on('message', (topic, message) => {
   if (topic === 'esp8266/sensor') {
     const data = JSON.parse(message.toString());
     // Lưu dữ liệu vào cơ sở dữ liệu
-    if(data.temperature !== null && data.temperature!== null && data.light !== null) {
-      const sql = 'INSERT INTO sensor_data (humidity, temperature, light, timestamp) VALUES (?, ?, ?, NOW())';
-
-      const values = [data.humidity, data.temperature, data.light, data.led1State, data.led2State];
+    console.log(data)
+    if (data.humidity !== null && data.temperature !== null && data.light !== null) {
+      const sql = 'INSERT INTO sensor_data (dobui,humidity, temperature, light, timestamp) VALUES (?, ?, ?, ?, NOW())';
+      const values = [data.dobui, data.humidity, data.temperature, data.light];
       // console.log(data.dobui)
       db.query(sql, values, (err, result) => {
         if (err) {

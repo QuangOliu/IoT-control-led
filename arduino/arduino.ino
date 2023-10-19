@@ -14,7 +14,7 @@ const char* ssid = "ssid";
 const char* password = "123456781";
 
 // Thiết lập thông tin MQTT broker
-const char* mqtt_broker = "192.168.254.214";
+const char* mqtt_broker = "192.168.185.214";
 // IPAddress mqtt_broker;
 
 const int mqtt_port = 1883;
@@ -82,7 +82,7 @@ void loop() {
   jsonDoc["humidity"] = humidity;
   jsonDoc["temperature"] = temperature;
   jsonDoc["light"] = lightValue;
-  // jsonDoc["dobui"] = dobui;
+  jsonDoc["dobui"] = dobui;
 
   // Đặt trạng thái của đèn trong JSON
   for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
