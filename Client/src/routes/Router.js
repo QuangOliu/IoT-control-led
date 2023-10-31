@@ -6,7 +6,7 @@ const dataHome = {
   img: "/assets/images/anhavt.jpg",
   hello: `Hello, I'm Quang Oliu`,
   typing: [
-    "Hi, I'm  <span style=color:red>Quang</span>",
+    "Hi, I'm  <span style=color:red>Hội</span>",
     "I'm <span style=color:red>21</span> years old",
     "My SID <span style=color:red>B20DCCN537</span>",
     "My email <span style=color:red>Trantran30102002@gmail.com</span>",

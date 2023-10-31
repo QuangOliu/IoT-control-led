@@ -63,18 +63,6 @@ const Tables = () => {
       return item[searchAttribute].toString().toLowerCase().includes(term.toLowerCase());
     });
 
-    // filtered2.sort((a, b) => {
-    //   const valueA = a[searchAttribute].toString().toLowerCase();
-    //   const valueB = b[searchAttribute].toString().toLowerCase();
-    //   if (valueA < valueB) {
-    //     return -1;
-    //   }
-    //   if (valueA > valueB) {
-    //     return 1;
-    //   }
-    //   return 0;
-    // });
-
     setFilteredData([...filtered1, ...filtered2]);
     setItemOffset(0); // Reset to the first page when filtering
   };

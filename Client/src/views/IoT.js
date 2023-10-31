@@ -44,16 +44,16 @@ const IoT = () => {
     <div style={{ height: "100vh" }}>
       {/***Top Cards***/}
       <Row style={{ height: "30%" }}>
-        <Col lg='4' className='mb-4'>
+        <Col lg='3' className='mb-4'>
           <TopCards title='Temp' subtitle='°C' earning={randomValue1} icon='bi bi-thermometer-half' />
         </Col>
-        <Col lg='4' className='mb-4'>
+        <Col lg='3' className='mb-4'>
           <TopCards title='Humidity' subtitle='%' earning={randomValue2} icon='bi bi-moisture' />
         </Col>
-        <Col lg='4' className='mb-4'>
+        <Col lg='3' className='mb-4'>
           <TopCards title='Brightness' subtitle='Lux' earning={randomValue3} low={200} mid={400} hight={700} icon='bi bi-brightness-high-fill' />
         </Col>
-        <Col lg='4' className='mb-4'>
+        <Col lg='3' className='mb-4'>
           <TopCards title='Độ Bụi' subtitle='Lux' earning={randomValue4} low={200} mid={400} hight={700} icon='bi bi-brightness-high-fill' />
         </Col>
       </Row>

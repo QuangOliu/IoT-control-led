@@ -37,7 +37,7 @@ db.connect(err => {
 // Kết nối đến MQTT broker
 const mqttClient = mqtt.connect(`mqtt://${process.env.MQTT_BROKER}`);
 
-mqttClient.on('connect', () => {
+mqttClient.on('connect', () => { 
   console.log('Kết nối MQTT broker thành công');
   mqttClient.subscribe('esp8266/sensor');
 });
@@ -123,11 +123,6 @@ app.post('/control/led/:ledId', (req, res) => {
 
 // API để truy vấn dữ liệu mới nhất của sensor_data với phân trang
 app.get('/sensor-data', (req, res) => {
-  const page = req.query.page || 1; // Trang mặc định là 1
-  const perPage = req.query.perPage || 10; // Số lượng dòng trên mỗi trang mặc định là 10
-
-  const startIndex = (page - 1) * perPage;
-  const endIndex = page * perPage;
 
   const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC`;
   // const sql = `SELECT * FROM sensor_data ORDER BY timestamp DESC LIMIT ${startIndex}, ${perPage}`;
@@ -185,7 +180,6 @@ app.get('/data-real-time', (req, res) => {
     }
   });
 });
-
 
 app.get('/history', (req, res)=> {
   const page = req.query.page || 1; // Trang mặc định là 1

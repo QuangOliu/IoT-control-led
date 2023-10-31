@@ -10,11 +10,11 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // Thiết lập kết nối Wi-Fi
-const char* ssid = "ssid";
-const char* password = "123456781";
+const char* ssid = "iot";
+const char* password = "28062002";
 
 // Thiết lập thông tin MQTT broker
-const char* mqtt_broker = "192.168.185.214";
+const char* mqtt_broker = "172.20.10.2";
 // IPAddress mqtt_broker;
 
 const int mqtt_port = 1883;

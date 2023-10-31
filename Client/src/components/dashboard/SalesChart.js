@@ -7,6 +7,7 @@ const SalesChart = ({ id }) => {
   const [temperature, setTemperature] = useState([]);
   const [humidity, setHumidity] = useState([]);
   const [light, setLight] = useState([]);
+  const [dobui, setDobui] = useState([]);
   const [timestamp, setTimestamp] = useState([]);
 
   useEffect(() => {
@@ -21,10 +22,12 @@ const SalesChart = ({ id }) => {
         const humidities = data.map((item) => item.humidity);
         const lights = data.map((item) => item.light);
         const timestamp = data.map((item) => item.timestamp);
+        const dobuis = data.map((item) => item.dobui);
 
         setTemperature(temperatures);
         setHumidity(humidities);
         setLight(lights);
+        setDobui(dobuis);
         setTimestamp(timestamp);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -47,6 +50,10 @@ const SalesChart = ({ id }) => {
       {
         name: "Light",
         data: light,
+      },
+      {
+        name: "Độ Bụi",
+        data: dobui,
       },
     ],
     options: {
