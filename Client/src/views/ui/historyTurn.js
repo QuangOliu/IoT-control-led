@@ -68,7 +68,7 @@ const Tables = () => {
             Table with Striped
           </CardTitle>
           <CardBody>
-            <div className='search-bar mb-3'>
+            {/* <div className='search-bar mb-3'>
               <Input type='text' placeholder='Search...' value={searchTerm} onChange={handleSearch} />
               <select value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)}>
                 <option value='timestamp'>TIME</option>
@@ -76,23 +76,23 @@ const Tables = () => {
                 <option value='state'>STATE</option>
                 <option value='id'>#</option>
               </select>
-            </div>
+            </div> */}
             <Table bordered striped>
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>TIME</th>
                   <th>TYPE</th>
                   <th>STATE</th>
+                  <th>TIME</th>
                 </tr>
               </thead>
               <tbody>
                 {currentItems.map((item) => (
                   <tr key={item.id}>
                     <th scope='row'>{item.id}</th>
-                    <td>{item.timestamp}</td>
                     <td>{item.led_id}</td>
                     <td>{item.state ? "ON" : "OFF"}</td>
+                    <td>{item.timestamp}</td>
                   </tr>
                 ))}
               </tbody>

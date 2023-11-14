@@ -39,14 +39,14 @@ const SalesChart = ({ id }) => {
 
   const chartoptions = {
     series: [
-      {
-        name: "Temperature",
-        data: temperature,
-      },
-      {
-        name: "Humidity",
-        data: humidity,
-      },
+      // {
+      //   name: "Temperature",
+      //   data: temperature,
+      // },
+      // {
+      //   name: "Humidity",
+      //   data: humidity,
+      // },
       {
         name: "Light",
         data: light,

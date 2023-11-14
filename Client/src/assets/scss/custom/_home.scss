@@ -228,3 +228,70 @@
 .react-paginate .selected a {
   color: #fff;
 }
+
+.batden {
+  margin-left: 900px;
+}
+.home {
+  // CSS cho phần tổng thể
+  &__content {
+    // CSS cho nội dung bên trong .home
+    display: flex;
+    background-color: cadetblue;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    margin-bottom: 40px;
+  }
+
+  &__img {
+    // CSS cho hình ảnh
+    img {
+      border-radius: 50%; // Làm tròn ảnh
+    }
+  }
+
+  &__extra {
+    // CSS cho phần bổ sung
+    padding: 20px;
+    text-align: center;
+
+    &__hello {
+      // CSS cho phần chào hỏi
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    &__typing {
+      // CSS cho phần typing
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    &__box {
+      // CSS cho hộp (box)
+      width: 100px;
+      height: 100px;
+      background-color: #F5A623;
+      margin: 20px auto;
+    }
+
+    &__pagram {
+      // CSS cho đoạn văn bản
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    &__list {
+      // CSS cho danh sách (ul)
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      
+      li {
+        // CSS cho mỗi phần tử danh sách (li)
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

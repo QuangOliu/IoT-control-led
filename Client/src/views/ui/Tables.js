@@ -92,7 +92,7 @@ const Tables = () => {
             Table with Striped
           </CardTitle>
           <CardBody>
-            <div className='search-bar mb-3'>
+            {/* <div className='search-bar mb-3'>
               <form onSubmit={handleSubmit}>
                 <Input type='text' placeholder='Tìm kiếm' value={searchTerm} onChange={handleSearch} />
                 <select value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)}>
@@ -104,7 +104,7 @@ const Tables = () => {
                   <option value='id'>#</option>
                 </select>
               </form>
-            </div>
+            </div> */}
             <Table bordered striped>
               <thead>
                 <tr>
@@ -112,14 +112,11 @@ const Tables = () => {
                     ID
                     {sortColumn === "id" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
                   </th>
-                  <th onClick={() => handleSort("timestamp")}>
-                    TIMESTAMP
-                    {sortColumn === "timestamp" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
-                  </th>
-                  <th onClick={() => handleSort("dobui")}>
+                  
+                  {/* <th onClick={() => handleSort("dobui")}>
                     Độ Bụi
                     {sortColumn === "dobui" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
-                  </th>
+                  </th> */}
                   <th onClick={() => handleSort("temperature")}>
                     TEMPERATURE
                     {sortColumn === "temperature" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
@@ -131,6 +128,10 @@ const Tables = () => {
                   <th onClick={() => handleSort("light")}>
                     LIGHT
                     {sortColumn === "light" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
+                  </th>
+                  <th onClick={() => handleSort("timestamp")}>
+                    TIMESTAMP
+                    {sortColumn === "timestamp" && <i className={`bi bi-arrow-${sortDirection === "asc" ? "up" : "down"}`} />}
                   </th>
                 </tr>
               </thead>
@@ -153,11 +154,11 @@ const Tables = () => {
                     // ... Rest of your table row rendering code
                     <tr key={item.id}>
                       <th scope='row'>{item.id}</th>
-                      <td>{item.timestamp}</td>
-                      <td>{item.dobui}</td>
+                      {/* <td>{item.dobui}</td> */}
                       <td>{item.temperature}</td>
                       <td>{item.humidity}</td>
                       <td>{item.light}</td>
+                      <td>{item.timestamp}</td>
                     </tr>
                   ))}
 

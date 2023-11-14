@@ -70,24 +70,24 @@ mqttClient.on('message', (topic, message) => {
 const server = http.createServer(app);
 
 // Tạo WebSocket server
-const io = socketIo(server);
+// const io = socketIo(server);
 
-io.on('connection', (socket) => {
-  console.log('Client connected');
+// io.on('connection', (socket) => {
+//   console.log('Client connected');
   
-  // Gửi dữ liệu mới nhất cho máy khách khi có kết nối mới
-  const sql = 'SELECT * FROM sensor_data ORDER BY timestamp DESC';
-  db.query(sql, (err, result) => {
-    if (!err && result.length > 0) {
-      const latestData = result[0];
-      socket.emit('data', latestData);
-    }
-  });
+//   // Gửi dữ liệu mới nhất cho máy khách khi có kết nối mới
+//   const sql = 'SELECT * FROM sensor_data ORDER BY timestamp DESC';
+//   db.query(sql, (err, result) => {
+//     if (!err && result.length > 0) {
+//       const latestData = result[0];
+//       socket.emit('data', latestData);
+//     }
+//   });
 
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-});
+//   socket.on('disconnect', () => {
+//     console.log('Client disconnected');
+//   });
+// });
 
 
 // API để điều khiển đèn

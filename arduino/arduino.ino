@@ -75,15 +75,28 @@ void loop() {
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature();
   int lightValue = analogRead(LIGHT_SENSOR);
-  int dobui = random(0, 101);
+  int dobui = random(0, 100);
 
   // Tạo đối tượng JSON
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["humidity"] = humidity;
   jsonDoc["temperature"] = temperature;
   jsonDoc["light"] = lightValue;
-  jsonDoc["dobui"] = dobui;
+  jsonDoc["dobui"] = dobui; 
 
+ if (dobui > 80) {
+    // Đèn nhấp nháy
+    for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+      digitalWrite(leds[i].pin, HIGH);
+      leds[i].state = true;
+    }
+    delay(500);  
+    for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
+      digitalWrite(leds[i].pin, LOW);
+      leds[i].state = false;
+    }
+    delay(500);  
+  }
   // Đặt trạng thái của đèn trong JSON
   for (int i = 0; i < sizeof(leds) / sizeof(leds[0]); i++) {
     jsonDoc[leds[i].topic] = leds[i].state;

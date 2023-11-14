@@ -19,7 +19,7 @@ const TopCards = (props) => {
     } else {
       gradientColors = `rgba(0, 123, 0, ${value / low}), rgba(0, 123, 0, 1)`;
     }
-
+    
     return gradientColors;
   };
 
@@ -33,7 +33,7 @@ const TopCards = (props) => {
     } else {
       bgColor = "bg-light-success text-success";
     }
-    return bgColor;
+    return 'bgColor';
   };
 
   const earningColor = calculateColor(props?.earning);
